@@ -1,0 +1,38 @@
+body {
+	font-family: 'Turret Road', cursive;
+	margin: 0 auto;
+	background: rgb(2, 0, 36);
+	background: linear-gradient(
+		90deg,
+		rgba(2, 0, 36, 1) 0%,
+		rgba(121, 9, 49, 1) 35%,
+		rgba(97, 50, 90, 1) 59%,
+		rgba(76, 86, 126, 1) 80%,
+		rgba(0, 212, 255, 1) 100%
+	);
+}
+
+#divOne {
+	margin-top: 50px;
+	padding-right: 50px;
+	width: 700px;
+}
+#divTwo {
+	margin-left: 175px;
+}
+.guessButton {
+	font-size: 25px;
+	padding: 7px;
+	margin: 7px;
+}
+
+.fontStyling {
+	font-size: 35px;
+	color: #fff;
+	text-align: center;
+}
+
+.card {
+	background-color: rgba(0, 0, 0, .6);
+	color: #fff;
+}
