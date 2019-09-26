@@ -6,17 +6,20 @@ var wins = 0;
 // my loses
 var losses = 0;
 // my guesses
-var guessesLeft = 4;
+var guessesLeft = 5;
 // my questions array
 var myQuestionsArray = [];
 // my
 var randomQuestion = {};
-
 // my timer
 var timer = 16;
+//  Variable that will hold our setInterval that runs the stopwatch
+var intervalId;
+// prevents the clock from being sped up unnecessarily
+var clockRunning = false;
+//clicks value thanks kahlil
 var selectedAnswer;
 
-// i have 15 of these objects
 // they will all follow this formatting
 function Question(quest, c1, w1, w2, w3, string) {
 	//name of character
@@ -188,7 +191,7 @@ function initialState() {
 
 // this is a full reset function that gets used after a full loss
 function reset() {
-	guessesLeft = 4;
+	guessesLeft = 5;
 	$('#guessesLeft').html(guessesLeft);
 	wins = 0;
 	$('#win').html(wins);
@@ -196,6 +199,7 @@ function reset() {
 	$('#loss').html(losses);
 	timer = 16;
 	$('#timer').html(timer);
+	start();
 }
 
 function winNlose() {
@@ -222,16 +226,34 @@ function winNlose() {
 		$('#guessesLeft').html(`${guessesLeft}`);
 		$('#loss').html(`${losses}`);
 		shuffle($('#divOne'));
-		//works
-
-		// this works
-		if (losses === 5) {
-			alert('you lost');
-			if (alert) {
-				reset();
-				$('#divOne').children().empty();
-				shuffle($('#divOne'));
-			}
+	}
+	//works
+	// for run out of time
+	if (timer <= 0) {
+		losses++;
+		$('#divOne').children().empty();
+		$('#guessesLeft').html(`${guessesLeft}`);
+		$('#loss').html(`${losses}`);
+		clear();
+		shuffle($('#divOne'));
+		initialState();
+		start();
+	} else if (timer <= 0 && losses > 5) {
+		clear();
+		alert('you lost');
+		if (alert) {
+			reset();
+			$('#divOne').children().empty();
+			shuffle($('#divOne'));
+		}
+	}
+	if (losses >= 5) {
+		alert('you lost');
+		if (alert) {
+			clear();
+			reset();
+			$('#divOne').children().empty();
+			shuffle($('#divOne'));
 		}
 	}
 }
@@ -245,30 +267,34 @@ function buttonClick() {
 }
 
 buttonClick();
-//initialState();
-// random question from shuffle loads on screen after player hits start button
-//shuffle($('#divOne'));
+$(document).ready(function() {
+	start();
+});
 
-// if the player clicks c1
+function start() {
+	//  TODO: Use setInterval to start the count here and set the clock to running.
+	if (!clockRunning) {
+		intervalId = setInterval('count()', 1000);
+	}
+}
+function stop() {
+	//  TODO: Use clearInterval to stop the count here and set the clock to not be running.
+	winNlose();
+}
+function count() {
+	//  TODO: increment time by 1, remember we cant use "this" here.
+	timer--;
+	$('#timer').html(timer);
+	if (timer <= 0) {
+		stop();
+	}
+}
+function clear() {
+	clearInterval(intervalId);
+}
 
-// wins++
-// if the player clicks w1 || w2 || w3
-// loses ++
-// guessesLeft --
-// win lose portion
-// if (wins === 16)
-// push a message to a div that say "you win"
-// update the start button to say Play Again
-// else if guessesLeft === 0
-// push a meaage that says you loose
-// update the start button to say Play again
-//}
-
-// function timer() {
-// 	// randomQuestions is displayed on screen for 15 seconds total
-// 	// after 5 seconds w3 disappears
-// 	// after 10 seconds 1 disappears
-// 	// after 15 seconds
-// 	// the random question disappears
-// 	// the next question is loaded
+// function timeConverter(t) {
+// 	//  Takes the current time in seconds and convert it to minutes and seconds (mm:ss).
+// 	var seconds = Math.floor(t / 1000);
+// 	return seconds;
 // }
