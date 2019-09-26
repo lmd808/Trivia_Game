@@ -12,12 +12,9 @@ var myQuestionsArray = [];
 // my
 var randomQuestion = {};
 
-var randomAnwser = [];
-
 // my timer
 var timer = 16;
-
-var arrayIndex;
+var selectedAnswer;
 
 // i have 15 of these objects
 // they will all follow this formatting
@@ -27,6 +24,9 @@ function Question(quest, c1, w1, w2, w3, string) {
 	this.ans = [ c1, w1, w2, w3 ];
 	this.correctAns = string;
 }
+initializeQuestions();
+shuffle($('#divOne'));
+initialState();
 
 // initialize question and anwsers
 function initializeQuestions() {
@@ -149,8 +149,6 @@ function initializeQuestions() {
 	console.log(myQuestionsArray.length);
 }
 
-initializeQuestions();
-
 // shuffle function
 function shuffle(DivID) {
 	// picks a random question from my question array
@@ -160,24 +158,24 @@ function shuffle(DivID) {
 	$('.question').addClass('fontStyling');
 	// my function for shuffling the anwsers without repeating them
 	// i looked this one up and threw in my own values
-	function shuffleArray(array) {
-		for (var i = array.length - 1; i > -1; i--) {
-			var j = Math.floor(Math.random() * (i + 1));
-			var temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
-			// appends the index of the array to buttons which appear in my screen
-			DivID.append(`<div><button class="guessButton">${randomQuestion.ans[i]}</button></div>`);
-			$('.guessButton').addClass('btn-block btn-dark');
-			arrayIndex = randomQuestion.ans[i];
-		}
-		return arrayIndex;
-	}
-	shuffleArray(randomQuestion.ans);
+	shuffleArray(DivID, randomQuestion.ans);
 	// werkin'
 	console.log('this is ' + randomQuestion.correctAns);
 }
-shuffle($('#divOne'));
+
+function shuffleArray(element, array) {
+	for (var i = array.length - 1; i > -1; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+		// appends the index of the array to buttons which appear in my screen
+		element.append(`<div><button class="guessButton">${randomQuestion.ans[i]}</button></div>`);
+		$('.guessButton').addClass('btn-block btn-dark');
+		arrayIndex = randomQuestion.ans[i];
+	}
+	return arrayIndex;
+}
 
 //this allows me to refresh after a win or a lose without reloading the whole page
 function initialState() {
@@ -187,7 +185,6 @@ function initialState() {
 	timer = 16;
 	$('#timer').html(timer);
 }
-initialState();
 
 // this is a full reset function that gets used after a full loss
 function reset() {
@@ -202,13 +199,15 @@ function reset() {
 }
 
 function winNlose() {
-	if (arrayIndex == randomQuestion.correctAns) {
+	if (selectedAnswer == randomQuestion.correctAns) {
 		// wins increment up by 1
 		wins++;
 		console.log(wins);
 		// reset the "game" to keep asking questions
 		$('#divOne').children().empty();
 		shuffle($('#divOne'));
+		$('#win').html(`${wins}`);
+
 		// if wins reach 10 then we full reset the game
 		if (wins === 10) {
 			alert('you won!');
@@ -216,13 +215,14 @@ function winNlose() {
 			$('#divOne').children().empty();
 			shuffle($('#divOne'));
 		}
-	} else if (arrayIndex !== randomQuestion.correctAns) {
+	} else if (selectedAnswer !== randomQuestion.correctAns) {
 		guessesLeft--;
 		losses++;
 		$('#divOne').children().empty();
+		$('#guessesLeft').html(`${guessesLeft}`);
+		$('#loss').html(`${losses}`);
 		shuffle($('#divOne'));
 		//works
-		$('#loss').html(`${losses}`);
 
 		// this works
 		if (losses === 5) {
@@ -239,6 +239,7 @@ function winNlose() {
 // this is my click function for clicking oon my guess buttons
 function buttonClick() {
 	$(document).on('click', 'button', function() {
+		selectedAnswer = $(this).text();
 		winNlose();
 	});
 }
