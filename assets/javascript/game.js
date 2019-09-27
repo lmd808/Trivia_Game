@@ -208,8 +208,11 @@ function winNlose() {
 		wins++;
 		console.log(wins);
 		// reset the "game" to keep asking questions
+		clear();
 		$('#divOne').children().empty();
 		shuffle($('#divOne'));
+		initialState();
+		start();
 		$('#win').html(`${wins}`);
 
 		// if wins reach 10 then we full reset the game
