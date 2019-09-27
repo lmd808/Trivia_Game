@@ -1,15 +1,16 @@
 body {
 	font-family: 'Turret Road', cursive;
 	margin: 0 auto;
-	background: rgb(2, 0, 36);
+	background-image: url('../images/newbg.jpg');
+	background-size: cover;
+	/* background: rgb(2, 0, 36);
 	background: linear-gradient(
 		90deg,
 		rgba(2, 0, 36, 1) 0%,
 		rgba(121, 9, 49, 1) 35%,
 		rgba(97, 50, 90, 1) 59%,
 		rgba(76, 86, 126, 1) 80%,
-		rgba(0, 212, 255, 1) 100%
-	);
+		rgba(0, 212, 255, 1) 100% */
 }
 .buttonBorders {
 	border-radius: 25px;
@@ -50,4 +51,23 @@ body {
 .card {
 	background-color: rgba(0, 0, 0, .6);
 	color: #fff;
+}
+
+.glow {
+	letter-spacing: .3em;
+	margin-bottom: -7px;
+	color: #fff;
+	-webkit-animation: glow 1s ease-in-out infinite alternate;
+	-moz-animation: glow 1s ease-in-out infinite alternate;
+	animation: glow 1s ease-in-out infinite alternate;
+}
+@-webkit-keyframes glow {
+	from {
+		text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073,
+			0 0 60px #e60073, 0 0 70px #e60073;
+	}
+	to {
+		text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6,
+			0 0 70px #ff4da6, 0 0 80px #ff4da6;
+	}
 }

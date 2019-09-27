@@ -47,17 +47,17 @@ function initializeQuestions() {
 		'She Wants Revenge'
 	);
 	var q2 = new Question(
-		"what is Laura's favorite music genra?",
-		'Seapunk Oprah',
+		"What is Laura's favorite music genra?",
+		'Southern Gothic',
 		'DeathCore',
 		'SynthWave',
-		'SpaceWave',
-		'Seapunk Oprah'
+		'Jazz',
+		'Southern Gothic'
 	);
 	var q3 = new Question(
-		"What is the name of Laura's newfoundland dog?",
+		"What is the name of Laura's Newfoundland Dog?",
 		'Sweet Georgia Brown',
-		'bad bad Leroy Brown',
+		'Bad Bad Leroy Brown',
 		'Cecil Brown',
 		'Sweet Molly Brown',
 		'Sweet Georgia Brown'
@@ -104,7 +104,7 @@ function initializeQuestions() {
 		'Nicholas Bruno'
 	);
 	var q10 = new Question(
-		'Laura loves morididity, What is the most morbid hobby she has? (Hint: all are right, but one is more right)',
+		"What is Laura's newest hobby? (Hint: all are right, but one is more right)",
 		'Taxidermy',
 		'Entymology',
 		'Bone and Rock Collecting',
@@ -112,15 +112,15 @@ function initializeQuestions() {
 		'Taxidermy'
 	);
 	var q11 = new Question(
-		'Laura loves many things, but what is her favorite thing?',
-		'All of these thing combined and at once',
-		'her dog',
-		'empty cities with bright neon lights',
-		'rain',
-		'All of these thing combined and at once'
+		'What would Laura Call \'"A perfect night"?',
+		'Walking with her dog through the rain in a neon lit city.',
+		'Spending time with her dog',
+		'Walking an empty city with bright neon lights.',
+		'Watching the rain fall.',
+		'Walking with her dog through the rain in a neon lit city.'
 	);
 	var q12 = new Question(
-		"What's something Laura hates?",
+		"What's something Laura can't Stand?",
 		'All Listed Choices',
 		'Whistling',
 		'Bullies',
@@ -128,25 +128,24 @@ function initializeQuestions() {
 		'All Listed Choices'
 	);
 	var q13 = new Question(
-		'Though Laura has more than enough time to sleep she chooses not to. What does Laura prefer to do over sleep?',
+		'What does Laura prefer to do over sleep?',
 		'Do all of these things at the same time',
 		'Organize',
 		'Make outfits for her dog',
-		'Watch Horror movies and shows',
+		"Watch horror movies 'n' shows",
 		'Do all of these things at the same time'
 	);
 	var q14 = new Question(
 		'Does Laura love her life?',
 		'All day erry day, yes!',
 		'Nah, she is discontent',
-		'I like it but it could be better',
+		'She likes it, but it could be better',
 		'No',
 		'All day erry day, yes!'
 	);
 
 	// push all of these questions into an array
 	myQuestionsArray.push(q0, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14);
-	console.log(myQuestionsArray.length);
 }
 
 // shuffle function
@@ -172,9 +171,7 @@ function shuffleArray(element, array) {
 		// appends the index of the array to buttons which appear in my screen
 		element.append(`<div><button class="guessButton">${randomQuestion.ans[i]}</button></div>`);
 		$('.guessButton').addClass('btn-block btn-dark animated slideInLeft');
-		arrayIndex = randomQuestion.ans[i];
 	}
-	return arrayIndex;
 }
 
 //this allows me to refresh after a win or a lose without reloading the whole page
@@ -188,15 +185,14 @@ function initialState() {
 
 // this is a full reset function that gets used after a full loss
 function reset() {
-	guessesLeft = 6;
+	guessesLeft = 5;
 	$('#guessesLeft').html(guessesLeft);
 	wins = 0;
 	$('#win').html(wins);
-	losses = -1;
+	losses = 0;
 	$('#loss').html(losses);
 	timer = 16;
 	$('#timer').html(timer);
-	start();
 }
 
 function winNlose() {
@@ -218,23 +214,31 @@ function winNlose() {
 			$('#divTwo').hide();
 			$('#divOne').hide();
 			$('#startButton').show();
-			$('#startButton').html("You Won! Let's Play Again");
+			$('#startButton').text("You Won! Let's Play Again");
 			startButton();
 		}
 	} else if (selectedAnswer !== randomQuestion.correctAns) {
 		guessesLeft--;
 		losses++;
 		clear();
+
 		$('#divOne').children().empty();
 		$('#guessesLeft').html(`${guessesLeft}`);
 		$('#loss').html(`${losses}`);
 		initialState();
-		shuffle($('#divOne'));
 		start();
+		shuffle($('#divOne'));
 	}
-	//works
-	// for run out of time
-	if (timer <= 0) {
+
+	if (timer <= 0 && losses > 5) {
+		//stop();
+		clear();
+		$('#divTwo').hide();
+		$('#divOne').hide();
+		$('#startButton').show();
+		$('#startButton').text('You Lost! Try Again!');
+		StartButton();
+	} else if (timer <= 0) {
 		losses++;
 		$('#divOne').children().empty();
 		$('#guessesLeft').html(`${guessesLeft}`);
@@ -244,31 +248,20 @@ function winNlose() {
 		initialState();
 		start();
 	}
-	if (timer <= 0 && losses > 5) {
-		reset();
-		// stop();
-		clear();
-		$('#divTwo').hide();
-		$('#divOne').hide();
-		$('#startButton').show();
-		$('#startButton').html('You Lost! Try Again!');
-		startButton();
-	}
 	if (losses >= 5) {
-		reset();
 		// stop();
 		clear();
 		$('#divTwo').hide();
 		$('#divOne').hide();
 		$('#startButton').show();
 		$('#startButton').html('You Lost! Try Again!');
-		startButton();
+		StartButton();
 	}
 }
 
 // this is my click function for clicking on my guess buttons
 function buttonClick() {
-	$(document).on('click', 'button', function() {
+	$(document).on('click', '.guessButton', function() {
 		selectedAnswer = $(this).text();
 		winNlose();
 	});
@@ -289,6 +282,7 @@ function count() {
 	timer--;
 	$('#timer').html(timer);
 	if (timer <= 0) {
+		clear();
 		stop();
 	}
 }
@@ -300,15 +294,15 @@ function clear() {
 // start button function
 function StartButton() {
 	$('#startButton').on('click', function() {
+		reset();
 		$('#startButton').hide();
 		$('#divOne').show();
 		$('#divTwo').show();
 		initializeQuestions();
 		$('#divOne').children().empty();
 		shuffle($('#divOne'));
-		initialState();
-		reset();
 		buttonClick();
+
 		clear();
 		start();
 	});
