@@ -6,7 +6,7 @@ var wins = 0;
 // my loses
 var losses = 0;
 // my guesses
-var guessesLeft = 5;
+var guessesLeft = 6;
 // my questions array
 var myQuestionsArray = [];
 // my
@@ -27,9 +27,6 @@ function Question(quest, c1, w1, w2, w3, string) {
 	this.ans = [ c1, w1, w2, w3 ];
 	this.correctAns = string;
 }
-initializeQuestions();
-shuffle($('#divOne'));
-initialState();
 
 // initialize question and anwsers
 function initializeQuestions() {
@@ -158,7 +155,7 @@ function shuffle(DivID) {
 	randomQuestion = myQuestionsArray[Math.floor(Math.random() * myQuestionsArray.length)];
 	// appends the question to my html div
 	DivID.append(`<div><h2 class="question">${randomQuestion.question}</h2></div>`);
-	$('.question').addClass('fontStyling');
+	$('.question').addClass('fontStyling animated slideInUp');
 	// my function for shuffling the anwsers without repeating them
 	// i looked this one up and threw in my own values
 	shuffleArray(DivID, randomQuestion.ans);
@@ -174,7 +171,7 @@ function shuffleArray(element, array) {
 		array[j] = temp;
 		// appends the index of the array to buttons which appear in my screen
 		element.append(`<div><button class="guessButton">${randomQuestion.ans[i]}</button></div>`);
-		$('.guessButton').addClass('btn-block btn-dark');
+		$('.guessButton').addClass('btn-block btn-dark animated slideInLeft');
 		arrayIndex = randomQuestion.ans[i];
 	}
 	return arrayIndex;
@@ -191,11 +188,11 @@ function initialState() {
 
 // this is a full reset function that gets used after a full loss
 function reset() {
-	guessesLeft = 5;
+	guessesLeft = 6;
 	$('#guessesLeft').html(guessesLeft);
 	wins = 0;
 	$('#win').html(wins);
-	losses = 0;
+	losses = -1;
 	$('#loss').html(losses);
 	timer = 16;
 	$('#timer').html(timer);
@@ -206,8 +203,6 @@ function winNlose() {
 	if (selectedAnswer == randomQuestion.correctAns) {
 		// wins increment up by 1
 		wins++;
-		console.log(wins);
-		// reset the "game" to keep asking questions
 		clear();
 		$('#divOne').children().empty();
 		shuffle($('#divOne'));
@@ -217,18 +212,25 @@ function winNlose() {
 
 		// if wins reach 10 then we full reset the game
 		if (wins === 10) {
-			alert('you won!');
 			reset();
-			$('#divOne').children().empty();
-			shuffle($('#divOne'));
+			// stop();
+			clear();
+			$('#divTwo').hide();
+			$('#divOne').hide();
+			$('#startButton').show();
+			$('#startButton').html("You Won! Let's Play Again");
+			startButton();
 		}
 	} else if (selectedAnswer !== randomQuestion.correctAns) {
 		guessesLeft--;
 		losses++;
+		clear();
 		$('#divOne').children().empty();
 		$('#guessesLeft').html(`${guessesLeft}`);
 		$('#loss').html(`${losses}`);
+		initialState();
 		shuffle($('#divOne'));
+		start();
 	}
 	//works
 	// for run out of time
@@ -241,27 +243,30 @@ function winNlose() {
 		shuffle($('#divOne'));
 		initialState();
 		start();
-	} else if (timer <= 0 && losses > 5) {
+	}
+	if (timer <= 0 && losses > 5) {
+		reset();
+		// stop();
 		clear();
-		alert('you lost');
-		if (alert) {
-			reset();
-			$('#divOne').children().empty();
-			shuffle($('#divOne'));
-		}
+		$('#divTwo').hide();
+		$('#divOne').hide();
+		$('#startButton').show();
+		$('#startButton').html('You Lost! Try Again!');
+		startButton();
 	}
 	if (losses >= 5) {
-		alert('you lost');
-		if (alert) {
-			clear();
-			reset();
-			$('#divOne').children().empty();
-			shuffle($('#divOne'));
-		}
+		reset();
+		// stop();
+		clear();
+		$('#divTwo').hide();
+		$('#divOne').hide();
+		$('#startButton').show();
+		$('#startButton').html('You Lost! Try Again!');
+		startButton();
 	}
 }
 
-// this is my click function for clicking oon my guess buttons
+// this is my click function for clicking on my guess buttons
 function buttonClick() {
 	$(document).on('click', 'button', function() {
 		selectedAnswer = $(this).text();
@@ -269,35 +274,48 @@ function buttonClick() {
 	});
 }
 
-buttonClick();
-$(document).ready(function() {
-	start();
-});
-
+// this starts the click ticking
 function start() {
-	//  TODO: Use setInterval to start the count here and set the clock to running.
 	if (!clockRunning) {
 		intervalId = setInterval('count()', 1000);
 	}
 }
+// this stops my clock from ticking
 function stop() {
-	//  TODO: Use clearInterval to stop the count here and set the clock to not be running.
 	winNlose();
 }
+// this is how my clock decrements by one
 function count() {
-	//  TODO: increment time by 1, remember we cant use "this" here.
 	timer--;
 	$('#timer').html(timer);
 	if (timer <= 0) {
 		stop();
 	}
 }
+// this is how I clear my clock
 function clear() {
 	clearInterval(intervalId);
 }
 
-// function timeConverter(t) {
-// 	//  Takes the current time in seconds and convert it to minutes and seconds (mm:ss).
-// 	var seconds = Math.floor(t / 1000);
-// 	return seconds;
-// }
+// start button function
+function StartButton() {
+	$('#startButton').on('click', function() {
+		$('#startButton').hide();
+		$('#divOne').show();
+		$('#divTwo').show();
+		initializeQuestions();
+		$('#divOne').children().empty();
+		shuffle($('#divOne'));
+		initialState();
+		reset();
+		buttonClick();
+		clear();
+		start();
+	});
+}
+// document call - we hide the other divs
+$(document).ready(function() {
+	$('#divTwo').hide();
+	$('#divOne').hide();
+	StartButton();
+});

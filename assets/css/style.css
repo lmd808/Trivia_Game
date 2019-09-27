@@ -11,13 +11,28 @@ body {
 		rgba(0, 212, 255, 1) 100%
 	);
 }
+.buttonBorders {
+	border-radius: 25px;
+}
 
 #divOne {
-	margin-top: 50px;
+	margin-top: 25px;
+	padding-right: 50px;
+	width: 700px;
+}
+.buttonDiv {
+	text-align: center;
+	padding: 100px;
+	margin-top: 150px;
+	font-size: 50px;
+}
+.buttonDivTransform {
+	margin-top: 25px;
 	padding-right: 50px;
 	width: 700px;
 }
 #divTwo {
+	margin-top: 25px;
 	margin-left: 175px;
 }
 .guessButton {
