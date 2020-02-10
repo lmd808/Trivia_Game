@@ -5,9 +5,8 @@
 
 ## Local Usage
 * Clone this repo to your computer
-* In the project directory, run `$npm install`
-* Edit `PORT` and `DB` configuration if necessary/desired 
-* Run `npm start` or `node app` to start your server and use this project on your own
+* Open from index.html file
+* Enjoy!
 
 ## Technologies: 
 * [Javascript](https://www.javascript.com/) - The scripting language used to manipulate the DOM.  
